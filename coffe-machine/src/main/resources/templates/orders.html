@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мої покупки</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f1ee;
+            margin: 0;
+            padding: 30px;
+            color: #3b2a1f;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            color: #5a3b26;
+        }
+
+        .menu {
+            margin: 20px 0;
+        }
+
+        .menu a {
+            display: inline-block;
+            background: #6f4e37;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            margin-right: 8px;
+        }
+
+        .menu a:hover {
+            background: #4b3323;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+        }
+
+        th {
+            background: #6f4e37;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .empty {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Мої покупки</h1>
+
+    <p>
+        Користувач:
+        <b th:text="${user.name}">user</b>
+        |
+        Поточний баланс:
+        <b th:text="${user.balance} + ' грн'">0 грн</b>
+    </p>
+
+    <div class="menu">
+        <a href="/drinks">До напоїв</a>
+        <a href="/">Головна</a>
+        <a href="/logout">Вийти</a>
+    </div>
+
+    <div class="empty" th:if="${#lists.isEmpty(orders)}">
+        Покупки ще не виконувалися.
+    </div>
+
+    <table th:if="${!#lists.isEmpty(orders)}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Напій</th>
+            <th>Кількість</th>
+            <th>Складники</th>
+            <th>Місце отримання</th>
+            <th>Сума</th>
+            <th>Дата покупки</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.drink.name}"></td>
+            <td th:text="${order.quantity}"></td>
+            <td th:text="${order.ingredientsInfo}"></td>
+            <td th:text="${order.pickupLocation}"></td>
+            <td th:text="${order.totalPrice} + ' грн'"></td>
+            <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

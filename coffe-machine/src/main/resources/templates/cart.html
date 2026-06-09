@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Кошик</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f1ee;
+            margin: 0;
+            padding: 30px;
+            color: #3b2a1f;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            color: #5a3b26;
+        }
+
+        .menu {
+            margin: 20px 0;
+        }
+
+        .menu a {
+            display: inline-block;
+            background: #6f4e37;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            margin-right: 8px;
+        }
+
+        .menu a:hover {
+            background: #4b3323;
+        }
+
+        .message {
+            padding: 12px;
+            background: #e8f5e9;
+            border: 1px solid #81c784;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .empty {
+            padding: 16px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+        }
+
+        th {
+            background: #6f4e37;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 11px;
+            text-align: center;
+        }
+
+        .remove {
+            background: #b00020;
+            color: white;
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+        }
+
+        .remove:hover {
+            background: #850018;
+        }
+
+        .summary {
+            margin-top: 22px;
+            padding: 18px;
+            background: #f7f2ef;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            text-align: right;
+            font-size: 18px;
+        }
+
+        .checkout {
+            display: inline-block;
+            margin-top: 12px;
+            background: #2f7d32;
+            color: white;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+        }
+
+        .checkout:hover {
+            background: #256428;
+        }
+
+        .clear {
+            display: inline-block;
+            margin-top: 12px;
+            background: #777;
+            color: white;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            margin-right: 8px;
+        }
+
+        .clear:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Кошик</h1>
+
+    <div class="menu">
+        <a href="/drinks">До напоїв</a>
+        <a href="/orders">Мої покупки</a>
+        <a href="/profile">Профіль</a>
+        <a href="/logout">Вийти</a>
+    </div>
+
+    <div class="message" th:if="${message}">
+        <span th:text="${message}"></span>
+    </div>
+
+    <div class="empty" th:if="${#lists.isEmpty(cart)}">
+        Кошик порожній. Додайте напій зі сторінки напоїв.
+    </div>
+
+    <table th:if="${!#lists.isEmpty(cart)}">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th>Напій</th>
+            <th>Кількість</th>
+            <th>Складники</th>
+            <th>Місце отримання</th>
+            <th>Сума</th>
+            <th>Дія</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="item, stat : ${cart}">
+            <td th:text="${stat.index + 1}"></td>
+            <td th:text="${item.drinkName}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${item.ingredientsInfo}"></td>
+            <td th:text="${item.pickupLocation}"></td>
+            <td th:text="${item.totalPrice} + ' грн'"></td>
+            <td>
+                <a class="remove"
+                   th:href="@{/cart/remove/{index}(index=${stat.index})}">
+                    Видалити
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="summary" th:if="${!#lists.isEmpty(cart)}">
+        <div>
+            Загальна сума:
+            <b th:text="${cartTotal} + ' грн'">0 грн</b>
+        </div>
+
+        <a class="clear" href="/cart/clear">Очистити кошик</a>
+        <a class="checkout" href="/cart/checkout">Оформити покупку</a>
+    </div>
+</div>
+
+</body>
+</html>

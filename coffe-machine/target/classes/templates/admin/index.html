@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Адмін-панель</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f1ee;
+            margin: 0;
+            padding: 30px;
+            color: #3b2a1f;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.12);
+        }
+
+        h1, h2 {
+            color: #5a3b26;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .menu {
+            margin: 20px 0;
+        }
+
+        .menu a {
+            display: inline-block;
+            background: #6f4e37;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            margin-right: 8px;
+        }
+
+        .menu a:hover {
+            background: #4b3323;
+        }
+
+        .message {
+            padding: 12px;
+            background: #e8f5e9;
+            border: 1px solid #81c784;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .error {
+            padding: 12px;
+            background: #ffebee;
+            border: 1px solid #ef9a9a;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 25px 0;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .tab-button {
+            background: #d7ccc8;
+            color: #3b2a1f;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tab-button:hover {
+            background: #bcaaa4;
+        }
+
+        .tab-button.active {
+            background: #6f4e37;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        .add-drink-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 2fr auto;
+            gap: 10px;
+            margin: 15px 0 25px 0;
+        }
+
+        .add-ingredient-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 10px;
+            margin: 15px 0 25px 0;
+        }
+
+        .inline-form {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 7px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #6f4e37;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4b3323;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: white;
+        }
+
+        th {
+            background: #6f4e37;
+            color: white;
+            padding: 11px;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .drink-img {
+            width: 70px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .edit {
+            background: #1976d2;
+            color: white;
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .edit:hover {
+            background: #0d47a1;
+        }
+
+        .delete {
+            background: #b00020;
+            color: white;
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .delete:hover {
+            background: #850018;
+        }
+
+        .empty-text {
+            padding: 14px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .add-drink-form {
+                grid-template-columns: 1fr;
+            }
+
+            .add-ingredient-form {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Адміністративна панель</h1>
+
+    <div class="menu">
+        <a href="/">Головна</a>
+        <a href="/drinks">Перегляд як споживач</a>
+        <a href="/logout">Вийти</a>
+    </div>
+
+    <div class="message" th:if="${message}">
+        <span th:text="${message}"></span>
+    </div>
+
+    <div class="error" th:if="${error}">
+        <span th:text="${error}"></span>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab('drinksTab', this)">Напої</button>
+        <button class="tab-button" onclick="openTab('ingredientsTab', this)">Складники</button>
+        <button class="tab-button" onclick="openTab('usersTab', this)">Користувачі</button>
+        <button class="tab-button" onclick="openTab('ordersTab', this)">Замовлення</button>
+    </div>
+
+    <div id="drinksTab" class="tab-content active">
+        <div class="section">
+            <h2>Додавання нового напою</h2>
+
+            <form class="add-drink-form" action="/admin/drinks/add" method="post">
+                <input type="text" name="name" placeholder="Назва напою" required>
+                <input type="number" step="0.01" name="price" placeholder="Ціна" required>
+                <input type="number" name="portions" placeholder="Порції" required>
+                <input type="text" name="imageName" placeholder="Файл фото, наприклад latte.jpg" required>
+                <button type="submit">Додати</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Напої</h2>
+
+            <div class="empty-text" th:if="${#lists.isEmpty(drinks)}">
+                Напої ще не додані.
+            </div>
+
+            <table th:if="${!#lists.isEmpty(drinks)}">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Фото</th>
+                    <th>Назва</th>
+                    <th>Ціна</th>
+                    <th>Порції</th>
+                    <th>Поповнення</th>
+                    <th>Дії</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="drink : ${drinks}">
+                    <td th:text="${drink.id}"></td>
+
+                    <td>
+                        <img class="drink-img"
+                             th:src="@{/images/{file}(file=${drink.imageName})}"
+                             alt="Фото напою">
+                    </td>
+
+                    <td th:text="${drink.name}"></td>
+                    <td th:text="${drink.price} + ' грн'"></td>
+                    <td th:text="${drink.portions}"></td>
+
+                    <td>
+                        <form class="inline-form"
+                              th:action="@{/admin/drinks/refill/{id}(id=${drink.id})}"
+                              method="post">
+                            <input type="number"
+                                   name="portions"
+                                   min="1"
+                                   placeholder="+ порції"
+                                   required
+                                   style="width:90px;">
+                            <button type="submit">Поповнити</button>
+                        </form>
+                    </td>
+
+                    <td>
+                        <a class="edit"
+                           th:href="@{/admin/drinks/edit/{id}(id=${drink.id})}">
+                            Редагувати
+                        </a>
+
+                        <a class="delete"
+                           th:href="@{/admin/drinks/delete/{id}(id=${drink.id})}">
+                            Видалити
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="ingredientsTab" class="tab-content">
+        <div class="section">
+            <h2>Складники</h2>
+
+            <form class="add-ingredient-form" action="/admin/ingredients/add" method="post">
+                <input type="text" name="name" placeholder="Назва складника" required>
+                <input type="number" name="amount" placeholder="Кількість" required>
+                <button type="submit">Додати складник</button>
+            </form>
+
+            <div class="empty-text" th:if="${#lists.isEmpty(ingredients)}">
+                Складники ще не додані.
+            </div>
+
+            <table th:if="${!#lists.isEmpty(ingredients)}">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Назва</th>
+                    <th>Кількість</th>
+                    <th>Поповнення</th>
+                    <th>Дії</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="ingredient : ${ingredients}">
+                    <td th:text="${ingredient.id}"></td>
+                    <td th:text="${ingredient.name}"></td>
+                    <td th:text="${ingredient.amount}"></td>
+
+                    <td>
+                        <form class="inline-form"
+                              th:action="@{/admin/ingredients/refill/{id}(id=${ingredient.id})}"
+                              method="post">
+                            <input type="number"
+                                   name="amount"
+                                   min="1"
+                                   placeholder="+ кількість"
+                                   required
+                                   style="width:110px;">
+                            <button type="submit">Поповнити</button>
+                        </form>
+                    </td>
+
+                    <td>
+                        <a class="delete"
+                           th:href="@{/admin/ingredients/delete/{id}(id=${ingredient.id})}">
+                            Видалити
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="usersTab" class="tab-content">
+        <div class="section">
+            <h2>Користувачі</h2>
+
+            <div class="empty-text" th:if="${#lists.isEmpty(users)}">
+                Користувачі відсутні.
+            </div>
+
+            <table th:if="${!#lists.isEmpty(users)}">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ім’я</th>
+                    <th>Роль</th>
+                    <th>Баланс</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.role}"></td>
+                    <td th:text="${user.balance} + ' грн'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="ordersTab" class="tab-content">
+        <div class="section">
+            <h2>Замовлення</h2>
+
+            <div class="empty-text" th:if="${#lists.isEmpty(orders)}">
+                Замовлення ще не виконувалися.
+            </div>
+
+            <table th:if="${!#lists.isEmpty(orders)}">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Користувач</th>
+                    <th>Напій</th>
+                    <th>Кількість</th>
+                    <th>Складники</th>
+                    <th>Місце отримання</th>
+                    <th>Сума</th>
+                    <th>Дата</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.user.name}"></td>
+                    <td th:text="${order.drink.name}"></td>
+                    <td th:text="${order.quantity}"></td>
+                    <td th:text="${order.ingredientsInfo}"></td>
+                    <td th:text="${order.pickupLocation}"></td>
+                    <td th:text="${order.totalPrice} + ' грн'"></td>
+                    <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTab(tabId, button) {
+        const contents = document.querySelectorAll('.tab-content');
+        const buttons = document.querySelectorAll('.tab-button');
+
+        contents.forEach(content => {
+            content.classList.remove('active');
+        });
+
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        document.getElementById(tabId).classList.add('active');
+        button.classList.add('active');
+    }
+</script>
+
+</body>
+</html>

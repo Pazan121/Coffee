@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Напої</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f1ee;
+            margin: 0;
+            padding: 30px;
+            color: #3b2a1f;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            color: #5a3b26;
+            margin-bottom: 10px;
+        }
+
+        .user-info {
+            background: #f7f2ef;
+            border: 1px solid #ddd;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+        }
+
+        .menu {
+            margin: 20px 0;
+        }
+
+        .menu a {
+            display: inline-block;
+            background: #6f4e37;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .menu a:hover {
+            background: #4b3323;
+        }
+
+        .message {
+            padding: 12px;
+            background: #e8f5e9;
+            border: 1px solid #81c784;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .drink-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .drink-card {
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .drink-card img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .drink-body {
+            padding: 18px;
+        }
+
+        .drink-title {
+            font-size: 22px;
+            color: #5a3b26;
+            margin: 0 0 10px 0;
+        }
+
+        .drink-meta {
+            margin: 6px 0;
+            font-size: 15px;
+        }
+
+        .drink-meta b {
+            color: #5a3b26;
+        }
+
+        .purchase-form {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #eee;
+        }
+
+        .form-block {
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #5a3b26;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+
+        .ingredients-list {
+            margin-top: 8px;
+            background: #f7f2ef;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .ingredient-item {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: normal;
+            color: #3b2a1f;
+        }
+
+        .cart-btn {
+            width: 100%;
+            background: #2f7d32;
+            color: white;
+            border: none;
+            padding: 11px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .cart-btn:hover {
+            background: #256428;
+        }
+
+        .disabled {
+            display: block;
+            margin-top: 14px;
+            padding: 12px;
+            background: #eeeeee;
+            border-radius: 8px;
+            color: #777;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .empty-text {
+            padding: 16px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Доступні напої</h1>
+
+    <div class="user-info">
+        Користувач:
+        <b th:text="${user.name}">user</b>
+        |
+        Баланс:
+        <b th:text="${user.balance} + ' грн'">0 грн</b>
+    </div>
+
+    <div class="menu">
+        <a href="/">Головна</a>
+        <a href="/profile">Профіль</a>
+        <a href="/cart">Кошик</a>
+        <a href="/orders">Мої покупки</a>
+        <a href="/logout">Вийти</a>
+    </div>
+
+    <div class="message" th:if="${message}">
+        <span th:text="${message}"></span>
+    </div>
+
+    <div class="empty-text" th:if="${#lists.isEmpty(drinks)}">
+        Напої поки відсутні.
+    </div>
+
+    <div class="drink-grid" th:if="${!#lists.isEmpty(drinks)}">
+        <div class="drink-card" th:each="drink : ${drinks}">
+            <img th:src="@{/images/{file}(file=${drink.imageName})}"
+                 alt="Фото напою">
+
+            <div class="drink-body">
+                <h2 class="drink-title" th:text="${drink.name}">Назва напою</h2>
+
+                <p class="drink-meta">
+                    <b>Ціна:</b>
+                    <span th:text="${drink.price} + ' грн'">0 грн</span>
+                </p>
+
+                <p class="drink-meta">
+                    <b>Доступні порції:</b>
+                    <span th:text="${drink.portions}">0</span>
+                </p>
+
+                <form class="purchase-form"
+                      th:if="${drink.portions > 0}"
+                      th:action="@{/cart/add/{id}(id=${drink.id})}"
+                      method="get">
+
+                    <div class="form-block">
+                        <label>
+                            Кількість:
+                            <input type="number"
+                                   name="quantity"
+                                   min="1"
+                                   th:max="${drink.portions}"
+                                   value="1"
+                                   required>
+                        </label>
+                    </div>
+
+                    <div class="form-block">
+                        <label>
+                            Місце отримання:
+                            <select name="pickupLocation" required>
+                                <option value="">Оберіть місце</option>
+                                <option value="Кавова зона коледжу">Кавова зона коледжу</option>
+                                <option value="Хол першого поверху">Хол першого поверху</option>
+                                <option value="Їдальня">Їдальня</option>
+                                <option value="Кабінет 204">Кабінет 204</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="form-block">
+                        <label>Додаткові складники:</label>
+
+                        <div class="ingredients-list">
+                            <label class="ingredient-item"
+                                   th:each="ingredient : ${ingredients}">
+                                <input type="checkbox"
+                                       name="ingredients"
+                                       th:value="${ingredient.id}"
+                                       th:disabled="${ingredient.amount <= 0}">
+
+                                <span th:text="${ingredient.name}">Складник</span>
+                                <small th:text="'(' + ${ingredient.amount} + ')'">(0)</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="cart-btn" type="submit">
+                        Додати в кошик
+                    </button>
+                </form>
+
+                <span class="disabled" th:if="${drink.portions <= 0}">
+                    Немає в наявності
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

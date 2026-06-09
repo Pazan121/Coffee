@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Кава-машина</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f1ee;
+            margin: 0;
+            padding: 40px;
+            color: #3b2a1f;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+
+        h1 {
+            color: #5a3b26;
+            font-size: 34px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .feature {
+            background: #f7f2ef;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .feature b {
+            color: #5a3b26;
+        }
+
+        .menu {
+            margin-top: 30px;
+        }
+
+        .menu a {
+            display: inline-block;
+            margin: 6px;
+            background: #6f4e37;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+        }
+
+        .menu a:hover {
+            background: #4b3323;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Програмний продукт «Кава-машина»</h1>
+
+    <p>
+        Система призначена для автоматизації купівлі гарячих напоїв.
+        Споживач може переглядати напої, додавати їх у кошик, обирати складники,
+        поповнювати рахунок і переглядати історію покупок.
+    </p>
+
+    <div class="features">
+        <div class="feature">
+            <b>Для споживача</b><br>
+            перегляд напоїв, вибір кількості, складників і місця отримання.
+        </div>
+
+        <div class="feature">
+            <b>Для адміністратора</b><br>
+            керування напоями, порціями, складниками, користувачами й замовленнями.
+        </div>
+
+        <div class="feature">
+            <b>Контроль системи</b><br>
+            перевірка балансу, залишків напоїв і доступності складників.
+        </div>
+    </div>
+
+    <div class="menu">
+        <a href="/login">Увійти в систему</a>
+        <a href="/about">Про систему</a>
+        <a href="/drinks">Напої</a>
+        <a href="/cart">Кошик</a>
+    </div>
+</div>
+
+</body>
+</html>

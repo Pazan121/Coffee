@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Вхід у систему</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f1ee;
+            margin: 0;
+            padding: 40px;
+            color: #3b2a1f;
+        }
+
+        .login-box {
+            max-width: 420px;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #5a3b26;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            background: #6f4e37;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #4b3323;
+        }
+
+        .error {
+            margin-top: 15px;
+            color: #b00020;
+            text-align: center;
+        }
+
+        .hint {
+            margin-top: 18px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        a {
+            color: #6f4e37;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h1>Вхід у систему</h1>
+
+    <form action="/login" method="post">
+        <label>Логін</label>
+        <input type="text" name="name" required>
+
+        <label>Пароль</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">Увійти</button>
+    </form>
+
+    <div class="error" th:if="${param.error}">
+        Неправильний логін або пароль
+    </div>
+
+    <div class="hint">
+        Споживач: <b>user / user</b><br>
+        Адміністратор: <b>admin / admin</b><br><br>
+        <a href="/">На головну</a>
+    </div>
+</div>
+
+</body>
+</html>

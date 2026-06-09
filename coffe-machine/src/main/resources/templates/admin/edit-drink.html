@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редагування напою</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f1ee;
+            margin: 0;
+            padding: 40px;
+            color: #3b2a1f;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            color: #5a3b26;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            background: #6f4e37;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #4b3323;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #6f4e37;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Редагування напою</h1>
+
+    <form th:action="@{/admin/drinks/edit/{id}(id=${drink.id})}" method="post">
+        <label>Назва напою</label>
+        <input type="text" name="name" th:value="${drink.name}" required>
+
+        <label>Ціна</label>
+        <input type="number" step="0.01" name="price" th:value="${drink.price}" required>
+
+        <label>Кількість порцій</label>
+        <input type="number" name="portions" th:value="${drink.portions}" required>
+
+        <label>Файл фото</label>
+        <input type="text" name="imageName" th:value="${drink.imageName}" required>
+
+        <button type="submit">Зберегти зміни</button>
+    </form>
+
+    <a href="/admin">Повернутися в адмін-панель</a>
+</div>
+
+</body>
+</html>
